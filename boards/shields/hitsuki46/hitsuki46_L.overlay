@@ -1,0 +1,45 @@
+#include "hitsuki46.dtsi"
+
+// Disable trackball_listener on left side (trackball is only on right side)
+&trackball_listener {
+    status = "disabled";
+};
+
+&kscan0 {
+        col-gpios
+            = <&xiao_d 10 GPIO_ACTIVE_HIGH>
+            , <&xiao_d 9 GPIO_ACTIVE_HIGH>
+            , <&xiao_d 8 GPIO_ACTIVE_HIGH>
+            , <&xiao_d 7 GPIO_ACTIVE_HIGH>
+            , <&gpio0 10 GPIO_ACTIVE_HIGH>
+            , <&gpio0 31 GPIO_ACTIVE_HIGH>
+            ;
+};
+
+// Pin control for SPI1 (WS2812 LED)
+&pinctrl {
+    spi1_default: spi1_default {
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK, 0, 20)>,
+                <NRF_PSEL(SPIM_MOSI, 0, 19)>,
+                <NRF_PSEL(SPIM_MISO, 0, 19)>;
+        };
+    };
+
+    spi1_sleep: spi1_sleep {
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK, 0, 20)>,
+                <NRF_PSEL(SPIM_MOSI, 0, 19)>,
+                <NRF_PSEL(SPIM_MISO, 0, 19)>;
+            low-power-enable;
+        };
+    };
+};
+
+// Override led_strip to set blue color
+&led_strip {
+    status = "okay";
+    chain-length = <1>;
+    // Pre-set WS2812 to blue color (0x0000FF)
+};
+
