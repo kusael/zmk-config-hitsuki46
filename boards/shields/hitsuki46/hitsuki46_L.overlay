@@ -4,10 +4,14 @@
 // Enable and configure trackball_listener for left side (scroll only)
 &trackball_listener {
     status = "okay";
-    device = <&trackball_left>;
+    device = <&trackball>;
 
-    // Left trackball: always in scroll mode (no auto-mouse layer)
-    input-processors = <&zip_xy_to_scroll_mapper>;
+    // Left trackball: always in scroll mode with proper scaling and transform
+    input-processors =
+        <&zip_x_scaler 0 1>,
+        <&zip_y_scaler 1 15>,
+        <&zip_xy_to_scroll_mapper>,
+        <&zip_scroll_transform INPUT_TRANSFORM_Y_INVERT>;
 };
 
 &kscan0 {
@@ -75,7 +79,7 @@
     pinctrl-names = "default", "sleep";
     cs-gpios = <&gpio0 9 GPIO_ACTIVE_LOW>;
 
-    trackball_left: trackball@0 {
+    trackball: trackball@0 {
         status = "okay";
         compatible = "pixart,pmw3610-alt";
         reg = <0>;
