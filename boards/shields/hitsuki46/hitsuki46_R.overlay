@@ -24,15 +24,6 @@
 
 // Enable trackball_left_listener on central side to process scroll events
 / {
-    // Custom code mapper for explicit horizontal and vertical scrolling
-    xy_to_scroll_mapper: xy_to_scroll_mapper {
-        compatible = "zmk,input-processor-code-mapper";
-        #input-processor-cells = <0>;
-        type = <INPUT_EV_REL>;
-        map = <INPUT_REL_X INPUT_REL_HWHEEL
-               INPUT_REL_Y INPUT_REL_WHEEL>;
-    };
-
     trackball_left_listener: trackball_left_listener {
         compatible = "zmk,input-listener";
         status = "okay";
@@ -41,9 +32,7 @@
         // Left trackball (from peripheral): always in scroll mode
         // Both X and Y axes are enabled for horizontal and vertical scrolling
         input-processors =
-            <&zip_x_scaler 0 15>,
-            <&zip_y_scaler 1 15>,
-            <&xy_to_scroll_mapper>;
+            <&zip_xy_to_scroll_mapper>;
     };
 };
 
@@ -60,9 +49,7 @@
     scroller {
         layers = <5>;
         input-processors =
-            <&zip_x_scaler 0 15>,
-            <&zip_y_scaler 1 15>,
-            <&xy_to_scroll_mapper>,
+            <&zip_xy_to_scroll_mapper>,
             <&zip_scroll_transform INPUT_TRANSFORM_Y_INVERT>;
     };
 };
