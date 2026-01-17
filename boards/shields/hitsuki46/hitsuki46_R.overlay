@@ -44,6 +44,18 @@
         invert-x = <0>;
         invert-y = <0>;
     };
+
+#if LEFT_TRACKBALL_MODE == 2 || RIGHT_TRACKBALL_MODE == 2
+    // Auto-enable gesture mode when layer 0 is activated
+    layer_listeners {
+        compatible = "zmk,layer-listeners";
+
+        gesture_mode_auto_enable {
+            layers = <0>;
+            bindings = <&mouse_gesture_on &none>;
+        };
+    };
+#endif
 };
 
 // Mouse Gesture Configuration for GESTURE mode
@@ -91,7 +103,11 @@
             <&zip_scroll_scaler 2 5>;
 #else
         // CURSOR MODE: Normal cursor with auto mouse layer
-        input-processors = <&zip_temp_layer 1 700>;
+        // Y-axis transform needed because sensor has invert-x/y for 180deg orientation
+        // but cursor needs correct direction
+        input-processors =
+            <&zip_xy_transform INPUT_TRANSFORM_Y_INVERT>,
+            <&zip_temp_layer 1 700>;
 
         // Optional: Enable scroll on layer 5
         scroller {
